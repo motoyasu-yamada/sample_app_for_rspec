@@ -1,0 +1,16 @@
+version: '3'
+services: 
+  runteq:
+    container_name: runteq
+    build: .
+    volumes:
+      - ".:/runteq:cached"
+      # 1. exclude volumes
+      - /runteq/vendor
+      - /runteq/node_modules
+      - /runteq/tmp
+      - /runteq/log
+      - /runteq/.git
+    ports:
+      - 3000:3000
+    tty:  true
