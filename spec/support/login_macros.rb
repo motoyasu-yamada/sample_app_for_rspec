@@ -1,4 +1,4 @@
-module SystemHelper
+module LoginMacros
   def login(user)
     visit login_path
     fill_in 'email', with: user.email

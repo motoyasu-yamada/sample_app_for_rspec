@@ -5,11 +5,7 @@ RSpec.describe "Tasks", type: :system do
     context 'ログインした状態でタスクの新規作成、編集、削除ができること' do
       let(:user)  { create(:user) }
       before do
-        # login user
-        visit login_path
-        fill_in 'email', with: user.email
-        fill_in 'password', with: '12345678'
-        click_button 'Login'
+        login user
         expect(current_path).to eq root_path
         expect(page).to have_content('Login successful')
       end
