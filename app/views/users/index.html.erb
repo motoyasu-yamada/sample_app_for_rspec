@@ -15,8 +15,8 @@
     <tr>
       <td><%= user.email %></td>
       <td><%= link_to 'Show', user %></td>
-      <td><%= link_to 'Edit', edit_user_path(user) if user == current_user %></td>
-      <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } if user == current_user %></td>
+      <td><%= link_to 'Edit', edit_user_path(user), id: "user-#{user.id}-edit"  if user == current_user %></td>
+      <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' }, id: "user-#{user.id}-destroy"  if user == current_user %></td>
     </tr>
   <% end %>
   </tbody>

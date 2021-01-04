@@ -8,7 +8,9 @@ services:
       # 1. exclude volumes
       - /runteq/vendor
       - /runteq/node_modules
-      - /runteq/tmp
+      - /runteq/tmp/cache
+      - /runteq/tmp/pids
+      - /runteq/tmp/sockets
       - /runteq/log
       - /runteq/.git
     ports:
