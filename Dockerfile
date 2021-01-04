@@ -4,6 +4,8 @@ WORKDIR /runteq
 SHELL ["/bin/bash", "-c"]
 ENTRYPOINT [ "/bin/bash" ]
 EXPOSE 3000
+# https://maku77.github.io/docker/term-error.html
+ENV DEBIAN_FRONTEND noninteractive
 
 # WORKING USER
 ARG DOCKER_UID=1000

@@ -18,6 +18,11 @@ group :development, :test do
   gem 'rspec-rails', '~> 4.0.1'
 end
 
+group :test do
+  gem 'capybara'
+  gem 'webdrivers'
+end
+
 group :development do
   gem 'web-console', '>= 3.3.0'
   gem 'listen', '>= 3.0.5', '< 3.2'
@@ -30,6 +35,7 @@ group :development do
   gem 'pry-doc'
   gem 'rubocop'
   gem 'rubocop-rails'
+  gem 'rubocop-checkstyle_formatter'
   gem 'rails_best_practices'
 end
 
