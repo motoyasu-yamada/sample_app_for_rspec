@@ -79,7 +79,7 @@ RSpec.describe "Users", type: :system do
   describe 'ログイン後' do
     let(:user) { create(:user) }
     let(:other_user) { create(:user) }
-    describe 'ユーザー編集' do
+    describe '正常系' do
       context 'フォームの入力値が正常' do
         it 'ユーザーの編集が成功する' do
           # login user
@@ -100,83 +100,75 @@ RSpec.describe "Users", type: :system do
           expect(page).to have_content('User was successfully updated.')
         end # it 'ユーザーの編集が成功する' do
       end # context 'フォームの入力値が正常' do
-      context 'ユーザーの編集が失敗する' do
-        before do
-          # login user
-          visit login_path
-          fill_in 'email', with: user.email
-          fill_in 'password', with: '12345678'
-          click_button 'Login'
-          expect(current_path).to eq root_path
-          expect(page).to have_content('Login successful')
-        end
-        it 'メールアドレスが未入力' do
-          visit edit_user_path(user)
+    end
 
-          fill_in 'user_email', with: ''
-          fill_in 'user_password', with: '12345678'
-          fill_in 'user_password_confirmation', with: '12345678'
-          click_button 'Update'
+    context '異常系' do
+      before do
+        # login user
+        visit login_path
+        fill_in 'email', with: user.email
+        fill_in 'password', with: '12345678'
+        click_button 'Login'
+        expect(current_path).to eq root_path
+        expect(page).to have_content('Login successful')
+      end
+      it 'メールアドレスが未入力' do
+        visit edit_user_path(user)
 
-          expect(current_path).to eq user_path(user)
-          expect(page).to have_content("Email can't be blank")
-        end
-        # it 'パスワードが未入力' do
-        #   visit edit_user_path(user)
+        fill_in 'user_email', with: ''
+        fill_in 'user_password', with: '12345678'
+        fill_in 'user_password_confirmation', with: '12345678'
+        click_button 'Update'
 
-        #   fill_in 'user_email', with: 'none@example.com'
-        #   fill_in 'user_password', with: ''
-        #   fill_in 'user_password_confirmation', with: ''
-        #   click_button 'Update'
+        expect(current_path).to eq user_path(user)
+        expect(page).to have_content("Email can't be blank")
+      end
+      # it 'パスワードが未入力' do
+      #   visit edit_user_path(user)
 
-        #   expect(current_path).to eq user_path(user)
-        #   expect(page).to have_content("Password is too short (minimum is 3 characters)")
-        #   expect(page).to have_content("Password confirmation can't be blank")
-        # end
-        it 'パスワードが異なる' do
-          visit edit_user_path(user)
+      #   fill_in 'user_email', with: 'none@example.com'
+      #   fill_in 'user_password', with: ''
+      #   fill_in 'user_password_confirmation', with: ''
+      #   click_button 'Update'
 
-          fill_in 'user_email', with: 'none@example.com'
-          fill_in 'user_password', with: 'aaa'
-          fill_in 'user_password_confirmation', with: 'bbb'
-          click_button 'Update'
+      #   expect(current_path).to eq user_path(user)
+      #   expect(page).to have_content("Password is too short (minimum is 3 characters)")
+      #   expect(page).to have_content("Password confirmation can't be blank")
+      # end
+      it 'パスワードが異なる' do
+        visit edit_user_path(user)
 
-          expect(current_path).to eq user_path(user)
-          expect(page).to have_content("Password confirmation doesn't match Password")
-        end     
-        it '登録済のメールアドレスを使用' do
-          visit edit_user_path(user)
+        fill_in 'user_email', with: 'none@example.com'
+        fill_in 'user_password', with: 'aaa'
+        fill_in 'user_password_confirmation', with: 'bbb'
+        click_button 'Update'
 
-          fill_in 'user_email', with: other_user.email
-          fill_in 'user_password', with: 'aaa'
-          fill_in 'user_password_confirmation', with: 'aaa'
-          click_button 'Update'
+        expect(current_path).to eq user_path(user)
+        expect(page).to have_content("Password confirmation doesn't match Password")
+      end     
+      it '登録済のメールアドレスを使用' do
+        visit edit_user_path(user)
 
-          expect(current_path).to eq user_path(user)
-          expect(page).to have_content("Email has already been taken")
-        end # it '登録済のメールアドレスを使用' do
-      end # context 'ユーザーの編集が失敗する' do
-    end # describe 'ユーザー編集' do
+        fill_in 'user_email', with: other_user.email
+        fill_in 'user_password', with: 'aaa'
+        fill_in 'user_password_confirmation', with: 'aaa'
+        click_button 'Update'
 
-    describe 'マイページ' do
-      context 'タスクを作成' do
-        before do
-          # login user
-          visit login_path
-          fill_in 'email', with: user.email
-          fill_in 'password', with: '12345678'
-          click_button 'Login'
-          expect(current_path).to eq root_path
-          expect(page).to have_content('Login successful')
-        end
-        it '新規作成したタスクが表示される' do
-          task = create(:task, user: user)
-          visit user_path(1)
-          expect(current_path).to eq user_path(1)
-          expect(page).to have_content(task.title)
-          expect(page).to_not have_content('There is no task.')
-        end # it '新規作成したタスクが表示される' do
-      end #context 'タスクを作成' do
-    end  # describe 'マイページ' do
+        expect(current_path).to eq user_path(user)
+        expect(page).to have_content("Email has already been taken")
+      end # it '登録済のメールアドレスを使用' do
+      it '他のユーザーのユーザー編集への遷移' do
+        other_user = create(:user)
+        visit users_path
+
+        expect(page).to have_content(user.email)
+        expect(page).to have_content(other_user.email)
+        expect(page).to have_link("user-#{user.id}-edit")
+        expect(page).to have_link("user-#{user.id}-destroy")
+        expect(page).to_not have_link("user-#{other_user.id}-edit")
+        expect(page).to_not have_link("user-#{other_user.id}-destroy")
+      end
+    end # context '異常系' do
+
   end # describe 'ログイン後' do
 end 
