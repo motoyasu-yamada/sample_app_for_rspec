@@ -66,4 +66,6 @@ RSpec.configure do |config|
   config.before(:all) do
     FactoryBot.reload
   end
+
+  config.include LoginMacros
 end

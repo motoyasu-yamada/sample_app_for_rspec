@@ -82,11 +82,7 @@ RSpec.describe "Users", type: :system do
     describe '正常系' do
       context 'フォームの入力値が正常' do
         it 'ユーザーの編集が成功する' do
-          # login user
-          visit login_path
-          fill_in 'email', with: user.email
-          fill_in 'password', with: '12345678'
-          click_button 'Login'
+          login user
           expect(current_path).to eq root_path
           expect(page).to have_content('Login successful')
           click_link  'Mypage'
@@ -104,11 +100,7 @@ RSpec.describe "Users", type: :system do
 
     context '異常系' do
       before do
-        # login user
-        visit login_path
-        fill_in 'email', with: user.email
-        fill_in 'password', with: '12345678'
-        click_button 'Login'
+        login user
         expect(current_path).to eq root_path
         expect(page).to have_content('Login successful')
       end
